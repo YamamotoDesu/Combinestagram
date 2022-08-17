@@ -1,5 +1,7 @@
 # Combinestagram
 
+## 1. Using a subject/relay in a view controller
+<img width="516" src="https://user-images.githubusercontent.com/47273077/185170770-507692fc-adc2-4837-8ba6-5ba48032c0fc.gif">
 
 MainViewController
 ```swift
