@@ -40,14 +40,24 @@ class MainViewController: UIViewController {
   @IBOutlet weak var buttonClear: UIButton!
   @IBOutlet weak var buttonSave: UIButton!
   @IBOutlet weak var itemAdd: UIBarButtonItem!
+  
+  private let bag = DisposeBag()
+  private let images = BehaviorRelay<[UIImage]>(value: [])
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    images.subscribe(onNext: { [weak imagePreview] photos in
+      guard let preview = imagePreview else { return }
+      
+      preview.image = photos.collage(size: preview.frame.size)
+    })
+    .disposed(by: bag)
 
   }
   
   @IBAction func actionClear() {
-
+    images.accept([])
   }
 
   @IBAction func actionSave() {
@@ -55,6 +65,8 @@ class MainViewController: UIViewController {
   }
 
   @IBAction func actionAdd() {
+    let newImages = images.value + [UIImage(named: "IMG_1907.jpg")!]
+    images.accept(newImages)
 
   }
 
