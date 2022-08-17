@@ -1,6 +1,9 @@
 # Combinestagram
 
-## 1. Using a subject/relay in a view controller
+## RxSwift: Reactive Programming with Swift | raywenderlich.com
+![image](https://user-images.githubusercontent.com/47273077/185172130-b3557025-c636-4a1b-8490-c900c8312b77.png)
+
+### 1. Using a subject/relay in a view controller
 <img width="516" src="https://user-images.githubusercontent.com/47273077/185170770-507692fc-adc2-4837-8ba6-5ba48032c0fc.gif">
 
 MainViewController
