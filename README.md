@@ -82,7 +82,7 @@ class MainViewController: UIViewController {
 
 ## 3. Observing the sequence of selected photos
 
-<img width="516" src="https://user-images.githubusercontent.com/47273077/185615339-9b49247e-ca90-4aa0-8725-b4373f3ed227.gif">
+<img width="516" src="https://user-images.githubusercontent.com/47273077/185623163-baf36e4f-17c2-4c02-9a7a-80d170569ce9.gif">
 
 MainViewController
 ```swift
