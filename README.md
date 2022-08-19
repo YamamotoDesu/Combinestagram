@@ -50,3 +50,28 @@ class MainViewController: UIViewController {
     present(alert, animated: true, completion: nil)
   }
 }
+
+### 2. Driving a complex view controller UI
+
+```swift
+
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    
+    // ------- 中略 ------- 
+    
+    images.subscribe(onNext: { [weak self] photos in
+      self?.updateUI(photos: photos)
+    })
+    .disposed(by: bag)
+
+  }
+
+  private func updateUI(photos: [UIImage]) {
+    buttonSave.isEnabled = photos.count > 0 && photos.count % 2 == 0
+    buttonClear.isEnabled = photos.count > 0
+    itemAdd.isEnabled = photos.count < 6
+    title = photos.count > 0 ? "\(photos.count) photos" : "Collage"
+    
+  }
+```
