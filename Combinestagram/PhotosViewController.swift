@@ -30,6 +30,7 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
+import RxSwift
 import UIKit
 import Photos
 
@@ -46,6 +47,15 @@ class PhotosViewController: UICollectionViewController {
     return CGSize(width: cellSize.width * UIScreen.main.scale,
                   height: cellSize.height * UIScreen.main.scale)
   }()
+  
+  /*
+   You'd like to add a PublishSubject to expose the selected photos,
+   but you don't want the subject publicly accessible, as that would allow other classes to call onNext(_) and make the subject emit values.
+   */
+  private let selectedPhotosSubject = PublishSubject<UIImage>()
+  var selectedPhotos: Observable<UIImage> {
+    return selectedPhotosSubject.asObservable()
+  }
 
   static func loadPhotos() -> PHFetchResult<PHAsset> {
     let allPhotosOptions = PHFetchOptions()
@@ -94,7 +104,9 @@ class PhotosViewController: UICollectionViewController {
 
     imageManager.requestImage(for: asset, targetSize: view.frame.size, contentMode: .aspectFill, options: nil, resultHandler: { [weak self] image, info in
       guard let image = image, let info = info else { return }
-      
+      if let isThumnail = info[PHImageResultIsDegradedKey as NSString] as? Bool, !isThumnail {
+        self?.selectedPhotosSubject.onNext(image)
+      }
     })
   }
 }
