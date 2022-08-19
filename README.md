@@ -79,3 +79,60 @@ class MainViewController: UIViewController {
     
   }
 ```
+
+## 3. Observing the sequence of selected photos
+
+<img width="516" src="https://user-images.githubusercontent.com/47273077/185615339-9b49247e-ca90-4aa0-8725-b4373f3ed227.gif">
+
+MainViewController
+```swift
+  @IBAction func actionAdd() {
+    
+    let photosViewController = storyboard!.instantiateViewController(withIdentifier: "PhotosViewController") as! PhotosViewController
+    
+    navigationController!.pushViewController(photosViewController, animated: true)
+    photosViewController.selectedPhotos
+      .subscribe(
+        onNext: { [weak self] newImage in
+          guard let images = self?.images else { return }
+          images.accept(images.value + [newImage])
+        },
+        onDisposed: {
+          print("Completed photo selection")
+        }
+      )
+      .disposed(by: bag)
+
+  }
+```
+
+PhotosViewController
+```swift
+
+  /*
+   You'd like to add a PublishSubject to expose the selected photos,
+   but you don't want the subject publicly accessible, as that would allow other classes to call onNext(_) and make the subject emit values.
+   */
+  private let selectedPhotosSubject = PublishSubject<UIImage>()
+  var selectedPhotos: Observable<UIImage> {
+    return selectedPhotosSubject.asObservable()
+  }
+  
+  
+ override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    let asset = photos.object(at: indexPath.item)
+
+    if let cell = collectionView.cellForItem(at: indexPath) as? PhotoCell {
+      cell.flash()
+    }
+
+    imageManager.requestImage(for: asset, targetSize: view.frame.size, contentMode: .aspectFill, options: nil, resultHandler: { [weak self] image, info in
+      guard let image = image, let info = info else { return }
+      if let isThumnail = info[PHImageResultIsDegradedKey as NSString] as? Bool, !isThumnail {
+        self?.selectedPhotosSubject.onNext(image)
+      }
+    })
+  }
+ ```
+  
+  
