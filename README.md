@@ -50,8 +50,12 @@ class MainViewController: UIViewController {
     present(alert, animated: true, completion: nil)
   }
 }
+```
+
 
 ### 2. Driving a complex view controller UI
+
+<img width="516" src="https://user-images.githubusercontent.com/47273077/185615339-9b49247e-ca90-4aa0-8725-b4373f3ed227.gif">
 
 ```swift
 
