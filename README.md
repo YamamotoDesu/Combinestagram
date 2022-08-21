@@ -135,4 +135,13 @@ PhotosViewController
   }
  ```
   
+  ## 4. Disposing subscriptions
+  PhotosViewController
   
+  ```swift
+    override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    selectedPhotosSubject.onCompleted()
+
+  }
+  ```
