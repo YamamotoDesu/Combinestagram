@@ -30,6 +30,7 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
+import RxSwift
 import Foundation
 import UIKit
 import Photos
@@ -39,5 +40,25 @@ class PhotoWriter {
     case couldNotSavePhoto
   }
 
+  static func save(_ image: UIImage) -> Observable<String> {
+    return Observable.create { observer in
+      var saveAssetId: String?
+      PHPhotoLibrary.shared().performChanges({
+        let request = PHAssetChangeRequest.creationRequestForAsset(from: image)
+        saveAssetId = request.placeholderForCreatedAsset?.localIdentifier
+        
+      }, completionHandler: { success, error in
+        DispatchQueue.main.async {
+          if success, let id = saveAssetId {
+            observer.onNext(id)
+            observer.onCompleted()
+          } else {
+            observer.onError(error ?? Errors.couldNotSavePhoto)
+          }
+        }
+      })
+      return Disposables.create()
+    }
+  }
 
 }
